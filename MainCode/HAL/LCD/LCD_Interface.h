@@ -22,6 +22,9 @@
   GLOBAL CONSTANT MACROS
 *******************************************/
 
+#define SHIFT_DISPLAY_RIGHT                  	(u8) 0b00011100
+
+#define SHIFT_DISPLAY_LIFT                  	(u8) 0b00011000
 
 /******************************************
   GLOBAL FUNCTIONS MACROS
@@ -47,6 +50,8 @@ void LCD_voidWriteString(u8 * copy_str);
 void LCD_voidGoToXY(u8 copy_u8Row,u8 copy_u8Col);
 
 void LCD_voidClear(void);
+
+void LCD_voidShift(u8 copy_u8direction);
 
 void LCD_voidWriteNumber( u32 Copy_u8num );
 

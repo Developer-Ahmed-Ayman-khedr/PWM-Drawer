@@ -149,6 +149,23 @@ void LCD_voidClear(void)
 
 }
 
+
+
+/***********************************************************************************/
+
+void LCD_voidShift(u8 copy_u8direction){
+	if (copy_u8direction==SHIFT_DISPLAY_RIGHT)
+		{
+			//Shift right
+			LCD_voidWriteCommand(SHIFT_DISPLAY_RIGHT);
+		}
+		else if (copy_u8direction==SHIFT_DISPLAY_LIFT)
+		{
+			//Shift left
+			LCD_voidWriteCommand(SHIFT_DISPLAY_LIFT);
+		}
+}
+
 /***********************************************************************************/
 
 void LCD_voidWriteNumber( u32 Copy_u8num )
@@ -194,6 +211,9 @@ void LCD_voidWriteSpecialCharToCGRAM(u8 *copy_u8data , u8 copy_u8ByteNum )
 	{
 		LCD_voidWriteData(copy_u8data[counter]);
 	}
+
+	//Reset cursor
+	LCD_voidGoToXY(0,0);
 
 }
 

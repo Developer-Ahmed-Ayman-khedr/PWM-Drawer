@@ -15,7 +15,29 @@
 
 #include"LCD_Interface.h"
 
-/*//PWM read using Timer0 and INT0
+/***********************************************************************************/
+//LCD CGRAM Locations
+#define HIGH_ADDRESS 		(u8)1
+
+#define LOW_ADDRESS			(u8)2
+
+#define FALLING_ADDRESS		(u8)3
+
+#define RISING_ADDRESS		(u8)4
+
+/***********************************************************************************/
+
+//PWM read using Timer0 and INT0
+
+BOOL State = FALSE;
+
+//BOOL HighState = FALSE;
+
+//BOOL LowState = FALSE;
+
+BOOL RisingState = FALSE;
+
+BOOL FallingState = FALSE;
 
 f32 Ttick = 0.004, TONTime=0; //ms
 //u32 dis;
@@ -30,6 +52,10 @@ void EXTINT_voidTriger(){
 	//rising edge state
 	if (edge==RISING_EDGE){
 
+		RisingState = TRUE;
+
+		State = TRUE;
+
 		TIMER0_VoidSetPreload(0);
 		//TIMER0_start(TIMER0_DIV64);
 
@@ -43,6 +69,10 @@ void EXTINT_voidTriger(){
 	//falling edge state
 	else if (edge==FALLING_EDGE){
 
+		FallingState = TRUE;
+
+		State = FALSE;
+
 		TIMER0_VoidStop();
 
 		//TIMER0_start(TIMER0_STOP);
@@ -55,70 +85,124 @@ void EXTINT_voidTriger(){
 
 		edge = FALLING_EDGE;
 	}
-}*/
+}
 
 int main(){
 
-	/*u8 Rising[] = {
-	   0b11111,
-	   0b00000,
-	   0b00000,
-	   0b00000,
-	   0b00000,
-	   0b00000,
-	   0b00000,
-	   0b00000
-	};
-
-	u8 Falling [] = {
-		0b00000,
-		0b00000,
-		0b00000,
-		0b00000,
-		0b00000,
-		0b00000,
-		0b00000,
-		0b11111
-	};
-
-	u8 StateChange [] = {
-	    0b10000,
-		0b10000,
-		0b10000,
-		0b10000,
-		0b10000,
-		0b10000,
-		0b10000,
-	    0b10000
-	};
-
 	//LCD
 
-	u8 LCDLocation = 0;
-*/
 	LCD_voidInit();
 
-	/*LCD_voidWriteSpecialCharToCGRAM(StateChange,1);
+	u8 LCDLocation = 0;
 
-	LCD_voidWriteSpecialCharToCGRAM(Rising,2);
+	u8 High[8] = {
+	   (u8)0b11111111,
+	   (u8)0b00000000,
+	   (u8)0b00000000,
+	   (u8)0b00000000,
+	   (u8)0b00000000,
+	   (u8)0b00000000,
+	   (u8)0b00000000,
+	   (u8)0b00000000
+	};
 
-	LCD_voidWriteSpecialCharToCGRAM(Falling,3);*/
+	u8 Low[8] = {
+		(u8)0b00000000,
+		(u8)0b00000000,
+		(u8)0b00000000,
+		(u8)0b00000000,
+		(u8)0b00000000,
+		(u8)0b00000000,
+		(u8)0b11111111,
+		(u8)0b11111111
+	};
 
+
+	u8 Rising[8] = {
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b11111111,
+		(u8)0b11111111
+	};
+
+	u8 Falling[8] = {
+		(u8)0b11111111,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b00000001,
+		(u8)0b11111111
+	};
+
+
+	//EXTINT0
+	EXTINT_voidInit(EXT0_ID,RISING_EDGE);
+
+	EXTINT_voidSetCallBack(EXTINT_voidTriger,EXT0_ID);
 	//Timer0
-	/*TIMER0_VoidInit();
+	TIMER0_VoidInit();
 
 	TIMER_voidSetCallBack(OverFlowFunction);
 
-	TIMER0_VoidStart();*/
+	TIMER0_VoidStart();
 
-	//EXTINT0
-	/*EXTINT_voidInit(EXT0_ID,RISING_EDGE);
-
-	EXTINT_voidSetCallBack(EXTINT_voidTriger,EXT0_ID);
-
-	GIE_Enable();*/
+	//Global Interrupt Enable
+	GIE_Enable();
 
 	while (1){
+
+		LCD_voidWriteSpecialCharToCGRAM(High,HIGH_ADDRESS);
+
+		LCD_voidWriteSpecialCharToCGRAM(Falling,LOW_ADDRESS);
+
+		LCD_voidWriteSpecialCharToCGRAM(Low,FALLING_ADDRESS);
+
+		LCD_voidWriteSpecialCharToCGRAM(Rising,RISING_ADDRESS);
+
+		if(RisingState==TRUE){
+			LCD_voidDisplaySpecialChar(RISING_ADDRESS);
+			RisingState = FALSE;
+		}
+		if(FallingState==TRUE){
+			LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
+			FallingState = FALSE;
+		}
+
+		if(State==TRUE){
+			LCD_voidDisplaySpecialChar(HIGH_ADDRESS);
+		}
+		else if(State==FALSE){
+			LCD_voidDisplaySpecialChar(LOW_ADDRESS);
+		}
+		//Normal LCD send
+/*		LCD_voidWriteSpecialCharToCGRAM(High,HIGH_ADDRESS);
+
+		LCD_voidWriteSpecialCharToCGRAM(Falling,LOW_ADDRESS);
+
+		LCD_voidWriteSpecialCharToCGRAM(Low,FALLING_ADDRESS);
+
+		LCD_voidWriteSpecialCharToCGRAM(Rising,RISING_ADDRESS);
+
+
+		LCD_voidGoToXY(0,LCDLocation);
+
+		LCD_voidDisplaySpecialChar(HIGH_ADDRESS);
+
+		LCD_voidDisplaySpecialChar(LOW_ADDRESS);
+
+		LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
+
+		LCD_voidDisplaySpecialChar(RISING_ADDRESS);
+
+		LCDLocation+=4;
+
+		_delay_ms(100);*/
 
 		//LCD_voidWriteData('H');
 		/*if(edge==FALLING_EDGE){
