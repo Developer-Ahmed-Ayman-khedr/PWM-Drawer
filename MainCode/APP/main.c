@@ -15,7 +15,7 @@
 
 #include"LCD_Interface.h"
 
-//PWM read using Timer0 and INT0
+/*//PWM read using Timer0 and INT0
 
 f32 Ttick = 0.004, TONTime=0; //ms
 //u32 dis;
@@ -55,27 +55,11 @@ void EXTINT_voidTriger(){
 
 		edge = FALLING_EDGE;
 	}
-}
-
-void HOLD_init(){
-
-
-	//Timer0
-	//TIMER0_initNormal();
-
-	//TIMER0_setCallbackOv(Timer0OvFunc);
-
-	//External Interrupt
-	//EXT_int0Int(EXT_RISING);
-
-	//EXT_setcallbackInt0(UltrasonicFunc);
-}
-
-
+}*/
 
 int main(){
 
-	u8 Rising[] = {
+	/*u8 Rising[] = {
 	   0b11111,
 	   0b00000,
 	   0b00000,
@@ -111,32 +95,33 @@ int main(){
 	//LCD
 
 	u8 LCDLocation = 0;
-
+*/
 	LCD_voidInit();
 
-	LCD_voidWriteSpecialCharToCGRAM(&StateChange,1);
+	/*LCD_voidWriteSpecialCharToCGRAM(StateChange,1);
 
-	LCD_voidWriteSpecialCharToCGRAM(&Rising,2);
+	LCD_voidWriteSpecialCharToCGRAM(Rising,2);
 
-	LCD_voidWriteSpecialCharToCGRAM(&Falling,3);
+	LCD_voidWriteSpecialCharToCGRAM(Falling,3);*/
 
 	//Timer0
-	TIMER0_VoidInit();
+	/*TIMER0_VoidInit();
 
 	TIMER_voidSetCallBack(OverFlowFunction);
 
-	TIMER0_VoidStart();
+	TIMER0_VoidStart();*/
 
 	//EXTINT0
-	EXTINT_voidInit(EXT0_ID,RISING_EDGE);
+	/*EXTINT_voidInit(EXT0_ID,RISING_EDGE);
 
 	EXTINT_voidSetCallBack(EXTINT_voidTriger,EXT0_ID);
 
-	GIE_Enable();
+	GIE_Enable();*/
 
 	while (1){
 
-		if(edge==FALLING_EDGE){
+		//LCD_voidWriteData('H');
+		/*if(edge==FALLING_EDGE){
 			LCDLocation++;
 			LCD_voidGoToXY(0,LCDLocation);
 			LCD_voidDisplaySpecialChar(1);
@@ -144,7 +129,7 @@ int main(){
 			LCD_voidDisplaySpecialChar(2);
 
 
-		}
+		}*/
 
 	}
 	return 0;
