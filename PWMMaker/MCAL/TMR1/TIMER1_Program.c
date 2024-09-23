@@ -34,7 +34,7 @@ void TIMER1_voidPwm1Init(void)
 }
 void TIMER1_voidPwm1SetTop(void)
 {
-	//PRESCALER = 256  at  16M F
+	//PRESCALER = 8  at  16M F
 	/*ICR1_REG=624;*/
 	ICR1_REG = 40000;
 }
@@ -44,7 +44,7 @@ void TIMER1_voidPwm1SetDutyCycle(void)
 	// pass num between 25 and 65
 	//OCR1A_REG = 62;
 
-	OCR1A_REG = 20000;
+	OCR1A_REG = 30500;
 
 }
 void TIMER1_voidPwm1Start(void)
