@@ -118,29 +118,6 @@ int main(){
 		(u8)0b11111111
 	};
 
-
-	/*u8 Rising[8] = {
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b11111111,
-		(u8)0b00000001
-	};
-
-	u8 Falling[8] = {
-		(u8)0b11111111,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b11111111
-	};*/
-
 	//EXTINT0
 
 	DIO_voidSetPinDirection(PORTD_ID,PIN2,PIN_INPUT);
@@ -164,11 +141,7 @@ int main(){
 	//Send the custom characters to the CGRAM
 	LCD_voidWriteSpecialCharToCGRAM(High,HIGH_ADDRESS);
 
-	/*LCD_voidWriteSpecialCharToCGRAM(Falling,FALLING_ADDRESS);*/
-
 	LCD_voidWriteSpecialCharToCGRAM(Low,LOW_ADDRESS);
-
-	/*LCD_voidWriteSpecialCharToCGRAM(Rising,RISING_ADDRESS);*/
 
 	while (1){
 
@@ -195,12 +168,6 @@ int main(){
 		LCD_voidGoToXY(2,LCDLocation);
 
 		while(HighState==TRUE){
-			/*if(RisingState==TRUE){
-				LCD_voidDisplaySpecialChar(RISING_ADDRESS);
-				_delay_ms(50);
-				LCDLocation++;
-				RisingState = FALSE;
-			}*/
 			LCD_voidDisplaySpecialChar(HIGH_ADDRESS);
 			_delay_ms(50);
 			LCDLocation++;
@@ -208,12 +175,6 @@ int main(){
 		}
 
 		while(LowState==TRUE){
-			/*if(FallingState==TRUE){
-				LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
-				_delay_ms(50);
-				LCDLocation++;
-				FallingState = FALSE;
-			}*/
 			LCD_voidDisplaySpecialChar(LOW_ADDRESS);
 			_delay_ms(50);
 			LCDLocation++;
@@ -227,42 +188,6 @@ int main(){
 		}
 
 		_delay_ms(50);
-
-		//Normal LCD send
-/*		LCD_voidWriteSpecialCharToCGRAM(High,HIGH_ADDRESS);
-
-		LCD_voidWriteSpecialCharToCGRAM(Falling,LOW_ADDRESS);
-
-		LCD_voidWriteSpecialCharToCGRAM(Low,FALLING_ADDRESS);
-
-		LCD_voidWriteSpecialCharToCGRAM(Rising,RISING_ADDRESS);
-
-
-		LCD_voidGoToXY(0,LCDLocation);
-
-		LCD_voidDisplaySpecialChar(HIGH_ADDRESS);
-
-		LCD_voidDisplaySpecialChar(LOW_ADDRESS);
-
-		LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
-
-		LCD_voidDisplaySpecialChar(RISING_ADDRESS);
-
-		LCDLocation+=4;
-
-		_delay_ms(100);*/
-
-		//LCD_voidWriteData('H');
-		/*if(edge==FALLING_EDGE){
-			LCDLocation++;
-			LCD_voidGoToXY(0,LCDLocation);
-			LCD_voidDisplaySpecialChar(1);
-
-			LCD_voidDisplaySpecialChar(2);
-
-
-		}*/
-
 	}
 	return 0;
 }
