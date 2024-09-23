@@ -29,61 +29,74 @@
 
 //PWM read using Timer0 and INT0
 
+//TRUE: ON
+//FALSE: OFF
+
+BOOL HighState = FALSE;
+
+BOOL LowState  = FALSE;
+
 BOOL State = FALSE;
 
-//BOOL HighState = FALSE;
+/*BOOL RisingState = FALSE;
 
-//BOOL LowState = FALSE;
+BOOL FallingState = FALSE;*/
 
-BOOL RisingState = FALSE;
+f32 TickTime = 0.004, TotalONTime=0 , TotalTime=0, DutyCycle=0; //ms
 
-BOOL FallingState = FALSE;
+u32 OverFlowCounter=0;
 
-f32 Ttick = 0.004, TONTime=0; //ms
-//u32 dis;
-u32 OverFlowCounter=0, TimeOn=0;
-u8 edge = RISING_EDGE;
+u8 edge = RISING_EDGE, RemainingTime=0;
 
 void OverFlowFunction(){
 	OverFlowCounter++;
 }
 
 void EXTINT_voidTriger(){
+
+	State = TRUE;
+
 	//rising edge state
 	if (edge==RISING_EDGE){
 
-		RisingState = TRUE;
+		/*LowState = FALSE;
 
-		State = TRUE;
+		RisingState = TRUE;*/
+
+		HighState = TRUE;
+
+		/*RemainingTime = TIMER0_VoidVal();
+
+		TotalTime = (RemainingTime + (256*OverFlowCounter) );
+
+		DutyCycle = (TotalONTime / TotalTime) * 100;
 
 		TIMER0_VoidSetPreload(0);
-		//TIMER0_start(TIMER0_DIV64);
 
-		OverFlowCounter = 0;
+		OverFlowCounter = 0;*/
 
 		EXTINT_voidInit(EXT0_ID,FALLING_EDGE);
 
-		edge = RISING_EDGE;
+		edge = FALLING_EDGE;
 
 	}
+
 	//falling edge state
 	else if (edge==FALLING_EDGE){
 
-		FallingState = TRUE;
+/*		HighState = FALSE;
 
-		State = FALSE;
+		FallingState = TRUE;*/
 
-		TIMER0_VoidStop();
+		LowState = TRUE;
 
-		//TIMER0_start(TIMER0_STOP);
-		//TimeOn = TIMER0_getCounts();
+		/*RemainingTime = TIMER0_VoidVal();
 
-		//TONTime = Ttick*(TimeOn+(256*OverFlowCounter));
-		//dis = 17 * TONTime;
+		TotalONTime = (RemainingTime + (256*OverFlowCounter) );*/
 
 		EXTINT_voidInit(EXT0_ID,RISING_EDGE);
 
-		edge = FALLING_EDGE;
+		edge = RISING_EDGE;
 	}
 }
 
@@ -118,18 +131,18 @@ int main(){
 	};
 
 
-	u8 Rising[8] = {
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
-		(u8)0b00000001,
+	u8 ChangingState[8] = {
+		(u8)0b11111111,
+		(u8)0b11111111,
+		(u8)0b11111111,
+		(u8)0b11111111,
+		(u8)0b11111111,
+		(u8)0b11111111,
 		(u8)0b11111111,
 		(u8)0b11111111
 	};
 
-	u8 Falling[8] = {
+	/*u8 Falling[8] = {
 		(u8)0b11111111,
 		(u8)0b00000001,
 		(u8)0b00000001,
@@ -138,13 +151,18 @@ int main(){
 		(u8)0b00000001,
 		(u8)0b00000001,
 		(u8)0b11111111
-	};
-
+	};*/
 
 	//EXTINT0
+
+	DIO_voidSetPinDirection(PORTD_ID,PIN2,PIN_INPUT);
+
+	DIO_voidSetPinValue(PORTD_ID,PIN2,PIN_HIGH);
+
 	EXTINT_voidInit(EXT0_ID,RISING_EDGE);
 
 	EXTINT_voidSetCallBack(EXTINT_voidTriger,EXT0_ID);
+
 	//Timer0
 	TIMER0_VoidInit();
 
@@ -157,29 +175,67 @@ int main(){
 
 	while (1){
 
+		//Send the custom characters to the CGRAM
 		LCD_voidWriteSpecialCharToCGRAM(High,HIGH_ADDRESS);
 
-		LCD_voidWriteSpecialCharToCGRAM(Falling,LOW_ADDRESS);
+		/*LCD_voidWriteSpecialCharToCGRAM(RISING_ADDRESS,LOW_ADDRESS);*/
 
-		LCD_voidWriteSpecialCharToCGRAM(Low,FALLING_ADDRESS);
+		LCD_voidWriteSpecialCharToCGRAM(Low,LOW_ADDRESS);
 
-		LCD_voidWriteSpecialCharToCGRAM(Rising,RISING_ADDRESS);
+		LCD_voidWriteSpecialCharToCGRAM(ChangingState,FALLING_ADDRESS);
 
-		if(RisingState==TRUE){
-			LCD_voidDisplaySpecialChar(RISING_ADDRESS);
-			RisingState = FALSE;
-		}
-		if(FallingState==TRUE){
-			LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
-			FallingState = FALSE;
-		}
+/*		LCD_voidWriteSpecialCharToCGRAM(Rising,RISING_ADDRESS);*/
+
+		//Frequency
+		LCD_voidWriteString("F: ");
+
+		LCD_voidWriteNumber((u8)((1 / DutyCycle) *1000));
+
+		LCD_voidWriteString(" KHz");
+
+		//Duty Cycle
+		LCD_voidGoToXY(0,12);
+
+		LCD_voidWriteString("D: ");
+
+		LCD_voidWriteNumber((u8)DutyCycle);
+
+		LCD_voidWriteString(" %");
+
+		//Illustration
+		LCD_voidGoToXY(2,LCDLocation);
 
 		if(State==TRUE){
+			/*LCD_voidDisplaySpecialChar(RISING_ADDRESS);*/
+
+			LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
+			LCDLocation++;
+			State = FALSE;
+		}
+
+		/*if(FallingState==TRUE){
+			LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
+			LCDLocation++;
+			FallingState = FALSE;
+		}*/
+
+		if(HighState==TRUE){
 			LCD_voidDisplaySpecialChar(HIGH_ADDRESS);
+			LCDLocation++;
 		}
-		else if(State==FALSE){
+
+		if(LowState==TRUE){
 			LCD_voidDisplaySpecialChar(LOW_ADDRESS);
+			LCDLocation++;
 		}
+
+
+		if(LCDLocation>=19){
+			LCDLocation = 0;
+		}
+
+		/*_delay_ms(100);*/
+
 		//Normal LCD send
 /*		LCD_voidWriteSpecialCharToCGRAM(High,HIGH_ADDRESS);
 

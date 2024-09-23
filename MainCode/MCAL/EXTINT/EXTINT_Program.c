@@ -26,9 +26,8 @@ void EXTINT_voidInit(u8 copy_u8ExtNum,u8 copy_u8ControlSens)
 	{
 	case EXT0_ID :
 
-
 		DIO_voidSetPinDirection(PORTD_ID,PIN2,PIN_INPUT);
-		DIO_voidSetPinValue(PORTD_ID,PIN2,PIN_HIGH);
+
 		if(copy_u8ControlSens==FALLING_EDGE)
 		{
 
@@ -52,7 +51,7 @@ void EXTINT_voidInit(u8 copy_u8ExtNum,u8 copy_u8ControlSens)
 	case EXT1_ID :
 
 		DIO_voidSetPinDirection(PORTD_ID,PIN3,PIN_INPUT);
-		DIO_voidSetPinValue(PORTD_ID,PIN3,PIN_HIGH);
+
 		if(copy_u8ControlSens==FALLING_EDGE)
 		{
 
@@ -73,7 +72,7 @@ void EXTINT_voidInit(u8 copy_u8ExtNum,u8 copy_u8ControlSens)
 	case EXT2_ID :
 
 		DIO_voidSetPinDirection(PORTB_ID,PIN2,PIN_INPUT);
-		DIO_voidSetPinValue(PORTB_ID,PIN2,PIN_HIGH);
+
 		if(copy_u8ControlSens==FALLING_EDGE)
 		{
 			CLR_BIT(MCUCSR_REG,MCUCSR_ISC2);
