@@ -5175,8 +5175,6 @@ int main(){
     22a8:	21 97       	sbiw	r28, 0x01	; 1
     22aa:	88 23       	and	r24, r24
     22ac:	21 f7       	brne	.-56     	; 0x2276 <main+0x48>
-		(u8)0b11111111
-	};*/
 
 	//EXTINT0
 
@@ -5225,8 +5223,6 @@ int main(){
     22ea:	8c 96       	adiw	r24, 0x2c	; 44
     22ec:	61 e0       	ldi	r22, 0x01	; 1
     22ee:	0e 94 17 10 	call	0x202e	; 0x202e <LCD_voidWriteSpecialCharToCGRAM>
-
-	/*LCD_voidWriteSpecialCharToCGRAM(Falling,FALLING_ADDRESS);*/
 
 	LCD_voidWriteSpecialCharToCGRAM(Low,LOW_ADDRESS);
     22f2:	ce 01       	movw	r24, r28
@@ -5336,11 +5332,8 @@ int main(){
     23be:	6b a5       	ldd	r22, Y+43	; 0x2b
     23c0:	0e 94 5b 0f 	call	0x1eb6	; 0x1eb6 <LCD_voidGoToXY>
     23c4:	78 c0       	rjmp	.+240    	; 0x24b6 <main+0x288>
-				LCD_voidDisplaySpecialChar(RISING_ADDRESS);
-				_delay_ms(50);
-				LCDLocation++;
-				RisingState = FALSE;
-			}*/
+
+		while(HighState==TRUE){
 			LCD_voidDisplaySpecialChar(HIGH_ADDRESS);
     23c6:	81 e0       	ldi	r24, 0x01	; 1
     23c8:	0e 94 4f 10 	call	0x209e	; 0x209e <LCD_voidDisplaySpecialChar>
@@ -5497,11 +5490,11 @@ _delay_ms(double __ms)
     24bc:	09 f4       	brne	.+2      	; 0x24c0 <main+0x292>
     24be:	83 cf       	rjmp	.-250    	; 0x23c6 <main+0x198>
     24c0:	78 c0       	rjmp	.+240    	; 0x25b2 <main+0x384>
-				LCD_voidDisplaySpecialChar(FALLING_ADDRESS);
-				_delay_ms(50);
-				LCDLocation++;
-				FallingState = FALSE;
-			}*/
+			LCDLocation++;
+
+		}
+
+		while(LowState==TRUE){
 			LCD_voidDisplaySpecialChar(LOW_ADDRESS);
     24c2:	82 e0       	ldi	r24, 0x02	; 2
     24c4:	0e 94 4f 10 	call	0x209e	; 0x209e <LCD_voidDisplaySpecialChar>
