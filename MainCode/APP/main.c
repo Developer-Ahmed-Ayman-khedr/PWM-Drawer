@@ -21,26 +21,23 @@
 
 #define LOW_ADDRESS			(u8)2
 
-#define FALLING_ADDRESS		(u8)3
-
-#define RISING_ADDRESS		(u8)4
-
 /***********************************************************************************/
 
 //PWM read using Timer0 and INT0
+
+/***********************************************************************************/
 BOOL HighState = FALSE;
 
 BOOL LowState  = FALSE;
+/***********************************************************************************/
 
-/*BOOL RisingState = FALSE;
-
-BOOL FallingState = FALSE;*/
-
+/***********************************************************************************/
 f32 TickTime = 0.004, TotalONTime = 0, TotalTime = 0, DutyCycle = 0; //ms
 
 u32 OverFlowCounter = 0;
 
 u8 edge = RISING_EDGE, RemainingTime = 0;
+/***********************************************************************************/
 
 void OverFlowFunction(){
 	OverFlowCounter++;
