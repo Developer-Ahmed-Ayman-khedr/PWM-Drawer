@@ -12,6 +12,8 @@
   INCLUDES
 *******************************************/
 
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
 
 /******************************************
   Global Data TYPES AND STRUCTURES
