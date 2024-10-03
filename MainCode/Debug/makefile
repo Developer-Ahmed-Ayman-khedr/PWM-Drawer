@@ -40,20 +40,20 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := MainCode
+BUILD_ARTIFACT_NAME := PWMDrawerCode
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 LSS += \
-MainCode.lss \
+PWMDrawerCode.lss \
 
 FLASH_IMAGE += \
-MainCode.hex \
+PWMDrawerCode.hex \
 
 EEPROM_IMAGE += \
-MainCode.eep \
+PWMDrawerCode.eep \
 
 SIZEDUMMY += \
 sizedummy \
@@ -63,43 +63,43 @@ sizedummy \
 all: main-build
 
 # Main-build Target
-main-build: MainCode.elf secondary-outputs
+main-build: PWMDrawerCode.elf secondary-outputs
 
 # Tool invocations
-MainCode.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+PWMDrawerCode.elf: $(OBJS) $(USER_OBJS) makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,MainCode.map -mmcu=atmega32 -o "MainCode.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,PWMDrawerCode.map -mmcu=atmega32 -o "PWMDrawerCode.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-MainCode.lss: MainCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+PWMDrawerCode.lss: PWMDrawerCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Invoking: AVR Create Extended Listing'
-	-avr-objdump -h -S MainCode.elf  >"MainCode.lss"
+	-avr-objdump -h -S PWMDrawerCode.elf  >"PWMDrawerCode.lss"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MainCode.hex: MainCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+PWMDrawerCode.hex: PWMDrawerCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Create Flash image (ihex format)'
-	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex MainCode.elf  "MainCode.hex"
+	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex PWMDrawerCode.elf  "PWMDrawerCode.hex"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MainCode.eep: MainCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+PWMDrawerCode.eep: PWMDrawerCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Create eeprom image (ihex format)'
-	-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex MainCode.elf  "MainCode.eep"
+	-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex PWMDrawerCode.elf  "PWMDrawerCode.eep"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-sizedummy: MainCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
+sizedummy: PWMDrawerCode.elf makefile objects.mk $(OPTIONAL_TOOL_DEPS)
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega32 MainCode.elf
+	-avr-size --format=avr --mcu=atmega32 PWMDrawerCode.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(EEPROM_IMAGE)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) MainCode.elf
+	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(EEPROM_IMAGE)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) PWMDrawerCode.elf
 	-@echo ' '
 
 secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY)
